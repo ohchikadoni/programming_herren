@@ -58,7 +58,7 @@ Die Analyse im Projekt "Elektronisches Tagebuch" wurde nach folgendem Schema ges
 
 Wir werden also folgende Diagramme zur Planung (Konzept) aufzeichnen:
 
-- Kontextdiagramm
+- Kontextdiagramm --> 3 Kontextdiagramme
 - Use Case Diagramm
 - Aktivitätsdiagramm
 - Kommunikationsdiagramm
