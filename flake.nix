@@ -18,6 +18,10 @@
               dotnet-sdk_8
             ];
           };
+
+          shellHook = ''
+            export DOTNET_ROOT="${pkgs.dotnet-sdk_8}/asdf"
+          '';
         });
     };
 }

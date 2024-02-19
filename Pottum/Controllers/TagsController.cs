@@ -26,26 +26,26 @@ public class TagsController : Controller
 
     public IActionResult Store([FromBody] Tag tag)
     {
-        _context.Tag.Add(tag);
+        _context.Tags.Add(tag);
         _context.SaveChanges();
         return RedirectToAction("Index");
     }
 
     public IActionResult Show(int id)
     {
-        var tag = _context.Tag.FirstOrDefault(e => e.Id == id);
+        var tag = _context.Tags.FirstOrDefault(e => e.Id == id);
         return View(tag);
     }
 
     public IActionResult Edit(int id)
     {
-        var tag = _context.Tag.FirstOrDefault(e => e.Id == id);
+        var tag = _context.Tags.FirstOrDefault(e => e.Id == id);
         return View(tag);
     }
 
     public IActionResult Update([FromBody] Tag tag)
     {
-        var oldTag = _context.Tag.FirstOrDefault(e => e.Id == tag.Id);
+        var oldTag = _context.Tags.FirstOrDefault(e => e.Id == tag.Id);
 
         _context.Entry(oldTag).CurrentValues.SetValues(tag);
         _context.SaveChanges();
@@ -54,9 +54,9 @@ public class TagsController : Controller
 
     public IActionResult Destroy(int id)
     {
-        var tag = _context.Tag.FirstOrDefault(e => e.Id == id);
+        var tag = _context.Tags.FirstOrDefault(e => e.Id == id);
 
-        _context.Tag.Remove(tag);
+        _context.Tags.Remove(tag);
         _context.SaveChanges();
         return RedirectToAction("Index");
     }

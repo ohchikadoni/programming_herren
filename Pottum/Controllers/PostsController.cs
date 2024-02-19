@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Pottum.Data;
 using Pottum.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Pottum.Controllers;
@@ -19,45 +20,101 @@ public class PostsController : Controller
         return View();
     }
 
-    public IActionResult Create()
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Title,Content,Tags")] Post post)
     {
-        return View();
-    }
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(post);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        catch (DbUpdateException)
+        {
+            ModelState.AddModelError("", "Unable to save changes. " +
+                "Try again, and if the problem persists " +
+                "see your system administrator.");
+        }
 
-    public IActionResult Store([FromBody] Post post)
-    {
-        _context.Post.Add(post);
-        _context.SaveChanges();
-        return RedirectToAction("Index");
-    }
-
-    public IActionResult Show(int id)
-    {
-        var staff = _context.Post.FirstOrDefault(e => e.Id == id);
-        return View();
-    }
-
-    public IActionResult Edit(int id)
-    {
-        var post = _context.Post.FirstOrDefault(e => e.Id == id);
         return View(post);
     }
 
-    public IActionResult Update([FromBody] Post post)
+    public async Task<IActionResult> Details(int? id)
     {
-        var oldPost = _context.Post.FirstOrDefault(e => e.Id == post.Id);
+        if (id == null)
+        {
+            return NotFound();
+        }
 
-        _context.Entry(oldPost).CurrentValues.SetValues(post);
-        _context.SaveChanges();
-        return RedirectToAction("Index");
+        var post = await _context.Posts
+            .Include(s => s.Tags)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        return View(post);
+
     }
 
-    public IActionResult Destroy(int id)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Content,Tags")] Post post)
     {
-        var post = _context.Post.FirstOrDefault(e => e.Id == id);
+        if (id != post.Id)
+        {
+            return NotFound();
+        }
 
-        _context.Post.Remove(post);
-        _context.SaveChanges();
-        return RedirectToAction("Index");
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                _context.Update(post);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists, " +
+                    "see your system administrator.");
+            }
+        }
+
+        return View(post);
+    }
+
+    public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var post = await _context.Posts
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        if (saveChangesError.GetValueOrDefault())
+        {
+            ViewData["ErrorMessage"] =
+                "Delete failed. Try again, and if the problem persists " +
+                "see your system administrator.";
+        }
+
+        return View(post);
     }
 }
