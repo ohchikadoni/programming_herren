@@ -4,11 +4,11 @@ namespace Potaso.Models;
 
 public class Tag
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required(ErrorMessage = "Title is required")]
     public string? Title { get; set; }
 
-    public ICollection<Post> Posts { get; } = [];
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }
 

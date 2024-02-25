@@ -5,5 +5,5 @@ namespace Potaso.Models;
 
 public class User: IdentityUser
 {
-    public ICollection<Post> Posts { get; } = new List<Post>();
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

@@ -4,18 +4,16 @@ namespace Potaso.Models;
 
 public class Post
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
-    [Required(ErrorMessage = "Title is required")]
-    public string? Title { get; set; }
+    public string Title { get; set; } = null!;
 
-    [Required(ErrorMessage = "Content is required")]
-    public string? Content { get; set; }
+    public string Content { get; set; } = null!;
 
-    public string UserId { get; set; }
+    public string? UserId { get; set; } = null!;
 
-    public User User { get; set; } = null!;
+    public virtual User? User { get; set; } = null!;
 
-    public ICollection<Tag> Tags { get; } = [];
+    public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
 

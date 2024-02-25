@@ -20,7 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
             b.HasMany(e => e.Posts)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
-                .IsRequired();
+                .IsRequired(true);
         });
 
         modelBuilder.Entity<Post>(b =>
