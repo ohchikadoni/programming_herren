@@ -21,6 +21,9 @@ public class PostsController : Controller
         _userManager = userManager;
     }
 
+    /**
+     * Diese Methode zeigt die Ansicht mit allen Posts vom Benutzer an.
+     */
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -34,20 +37,26 @@ public class PostsController : Controller
         return View(posts);
     }
 
+    /**
+     * Diese Methode zeigt die Create Ansicht an
+     */
     public IActionResult Create()
     {
         return View();
     }
 
+    /**
+     * Diese Methode erstellt einen Post.
+     */
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(PostViewModel postVM)
     {
         if (ModelState.IsValid)
         {
-            var userId = (await _userManager.GetUserAsync(HttpContext.User))!.Id;
+            var userId = (await _userManager.GetUserAsync(HttpContext.User))!.Id; // Gibt den Eingelogten User zurück
 
-            var tags = postVM.Tags!.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrEmpty(t)).ToList();
+            var tags = postVM.Tags!.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrEmpty(t)).ToList(); // Split
             var existingTags = _context.Tags.Where(t => tags.Contains(t.Title)).ToList();
             var newTags = tags.Except(existingTags.Select(t => t.Title));
 
@@ -80,10 +89,40 @@ public class PostsController : Controller
                     "see your system administrator.");
             }
         }
-        
+
         return View(postVM);
     }
 
+        /**
+     * Diese Methode zeigt die Edit Ansicht an
+     */
+    [HttpGet]
+    public async Task<IActionResult> Details(string id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var post = await _context.Posts.FindAsync(new Guid(id));
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        var postVM = new PostViewModel() {
+            Id = post.Id,
+            Title = post.Title,
+            Content = post.Content,
+            Tags = string.Join(',', post.Tags.Select(t => t.Title))
+        };
+
+        return View(postVM);
+    }
+
+    /**
+     * Diese Methode zeigt die Edit Ansicht an
+     */
     [HttpGet]
     public async Task<IActionResult> Edit(string id)
     {
@@ -108,6 +147,9 @@ public class PostsController : Controller
         return View(postVM);
     }
 
+    /**
+     * Diese Methode ändert den Post
+     */
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(string id, PostViewModel postVM)
@@ -145,7 +187,7 @@ public class PostsController : Controller
 
             postToUpdate.Tags.Clear();
             postToUpdate.Tags = existingTagsInDB;
-            
+
             var cleanExcludes = existingTagsInDB.Select(t => t.Id).ToList();
             var tagsToClean = _context.Tags.Where(t => !t.Posts.Any() && !cleanExcludes.Contains(t.Id));
             _context.Tags.RemoveRange(tagsToClean);
@@ -166,6 +208,9 @@ public class PostsController : Controller
         return View(postVM);
     }
 
+    /**
+     * Diese Methode löscht den Post
+     */
     public async Task<IActionResult> Delete(string id)
     {
         if (id == null)
