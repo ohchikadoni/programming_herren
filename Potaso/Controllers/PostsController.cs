@@ -52,7 +52,7 @@ public class PostsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(PostViewModel postVM)
     {
-        if (ModelState.IsValid)
+        if (ModelState.IsValid) // Gibt an ob der PostViewModel valid ist.
         {
             var userId = (await _userManager.GetUserAsync(HttpContext.User))!.Id; // Gibt den Eingelogten User zurück
 
@@ -93,8 +93,8 @@ public class PostsController : Controller
         return View(postVM);
     }
 
-        /**
-     * Diese Methode zeigt die Edit Ansicht an
+    /**
+     * Diese Methode zeigt
      */
     [HttpGet]
     public async Task<IActionResult> Details(string id)
@@ -167,7 +167,7 @@ public class PostsController : Controller
             return NotFound();
         }
 
-        if(ModelState.IsValid)
+        if(ModelState.IsValid) // Gibt an ob der PostViewModel valid ist.
         {
             postToUpdate.Title = postVM.Title;
             postToUpdate.Content = postVM.Content;

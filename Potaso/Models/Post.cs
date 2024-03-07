@@ -2,6 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Potaso.Models;
 
+/**
+ * Das Model des Post hat Attributte für Id, Title, Content und UserId.
+ * Es verlinkt den Benutzer und Tag mit dem Post.
+ */
 public class Post
 {
     public Guid Id { get; set; }

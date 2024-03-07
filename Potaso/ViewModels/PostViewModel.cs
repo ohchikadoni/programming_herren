@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Potaso.ViewModels;
 
+/**
+ * Dies ist ein View Model welches für die Eingabe und Ausgabe des Post verwendet wird.
+ */
 public class PostViewModel
 {
     public Guid? Id { get; set; }
