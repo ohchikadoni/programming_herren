@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Potaso.Models;
 
 /**
- * Das Model des Tags
+ * Das Model des Tags vom Posts
  */
 public class Tag
 {
