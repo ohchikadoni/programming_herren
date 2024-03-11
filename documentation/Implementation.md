@@ -8,8 +8,7 @@ Darauf haben wir das Tagebuch aufgebaut. Wir haben als nächstes mit dem Entity-
 
 Das grosse Problem gab es beim PostsController. Wir haben zuerst nicht verstanden wie das Routing der HTTP Requests vom ASP.NET Core funktioniert. Nach dem Suchen und Testen haben wir es verstanden. Doch leider haben wir mit der CRUD implementation vom Post hatten wir grosse Probleme, weil wir nicht verstanden wie die Validation und Pages funktionieren.
 Nach dem wir im Gesamten für dieses Feature Acht Stunden versucht haben es mit der Suche und der Dokumentation zu Lösen.
-Es hat Leidernicht geklapt darum habe ich mich einen ASP.NET Core gefragt, dieser hat dann geholfen und es erklärt warum es nicht fuktioniert hat.
-
+Es hat Leidernicht geklapt darum habe ich mich einen ASP.NET Core gefragt, dieser hat dann geholfen und es erklärt warum es nicht fuktioniert hat. Dadurch haben wir gelernt ViewModel für den Post zu machen für die Formulare und Validation zu machen. Das validierte PostViewModel wird dan in das Post abgefühlt.
 
 Zeitlich hat es uns nicht gereicht die Filter funktionen einzubauen und den Bilder Upload für den Post.
 
