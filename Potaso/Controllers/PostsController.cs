@@ -56,6 +56,9 @@ public class PostsController : Controller
         {
             var userId = (await _userManager.GetUserAsync(HttpContext.User))!.Id; // Gibt den Eingelogten User zurück
 
+            // Einfach halber haben wir hier Tag vom View und DB genomen und verglichen.
+            // Dann hatten wir eine List mit allen Tags die noch nicht in der DB existieren und die erstellt.
+            // Die Umsetztung funktioniert gut aber ist bei Millionen von Einträge inefizient
             var tags = postVM.Tags!.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrEmpty(t)).ToList(); // Split
             var existingTags = _context.Tags.Where(t => tags.Contains(t.Title)).ToList();
             var newTags = tags.Except(existingTags.Select(t => t.Title));
@@ -172,6 +175,9 @@ public class PostsController : Controller
             postToUpdate.Title = postVM.Title;
             postToUpdate.Content = postVM.Content;
 
+            // Einfach halber haben wir hier Tag vom View und DB genomen und verglichen.
+            // Dann hatten wir eine List mit allen Tags die noch nicht in der DB existieren und die erstellt.
+            // Die Umsetztung funktioniert gut aber ist bei Millionen von Einträge inefizient
             var tags = postVM.Tags!.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrEmpty(t)).ToList();
             var existingTagsInDB = _context.Tags.Where(t => tags.Contains(t.Title)).ToList();
             var newTags = tags.Except(existingTagsInDB.Select(t => t.Title));
@@ -188,6 +194,7 @@ public class PostsController : Controller
             postToUpdate.Tags.Clear();
             postToUpdate.Tags = existingTagsInDB;
 
+            // Hier wird noch verglichen welche Tags das keinem Post zugewisen sind. Diese werden dan gelöscht.
             var cleanExcludes = existingTagsInDB.Select(t => t.Id).ToList();
             var tagsToClean = _context.Tags.Where(t => !t.Posts.Any() && !cleanExcludes.Contains(t.Id));
             _context.Tags.RemoveRange(tagsToClean);
@@ -228,6 +235,7 @@ public class PostsController : Controller
 
         _context.Posts.Remove(postToDelete);
 
+        // Hier wird noch verglichen welche Tags das keinem Post zugewisen sind. Diese werden dan gelöscht.
         var tagsToClean = _context.Tags.Where(t => t.Posts.Count(p => p.Id != postToDelete.Id) == 0);
         _context.Tags.RemoveRange(tagsToClean);
 
